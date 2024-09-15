@@ -39,6 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'JobLanderAPI',
     'rest_framework',
+    'djoser',
+    'rest_framework.authtoken',
 ]
 
 MIDDLEWARE = [
@@ -56,7 +58,7 @@ ROOT_URLCONF = 'joblander.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': ['templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -84,6 +86,14 @@ DATABASES = {
         'HOST' : 'localhost',
         'PORT' : '3306',
     }
+}
+
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    )
 }
 
 
@@ -127,3 +137,21 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+DJOSER={
+    "USER_ID_FIELD":"username",
+    "USER_CREATE_PASSWORD_RETYPE":True,
+    "SET_PASSWORD_RETYPE":True,
+    "PASSWORD_RESET_CONFIRM_RETYPE":True,
+    "USERNAME_CHANGED_EMAIL_CONFIRMATION":True,
+    "SEND_CONFIRMATION_EMAIL":True,
+    "PASSWORD_CHANGED_EMAIL_CONFIRMATION":True,
+    "LOGOUT_ON_PASSWORD_CHANGE":True,
+    "PASSWORD_RESET_CONFIRM_URL":"password/reset/confirm/{uid}/{token}",
+    "USERNAME_RESET_CONFIRM_URL":"username/reset/confirm/{uid}/{token}",
+    "ACTIVATION_URL":"activate/{uid}/{token}",
+    "SEND_ACTIVATION_EMAIL":True,
+    "PASSWORD_RESET_SHOW_EMAIL_NOT_FOUND":True,
+    "USERNAME_RESET_SHOW_EMAIL_NOT_FOUND":True,
+    }

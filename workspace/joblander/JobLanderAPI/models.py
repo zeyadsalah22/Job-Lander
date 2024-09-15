@@ -1,5 +1,6 @@
 from django.db import models
 from enum import Enum
+from django.contrib.auth.models import User
 
 # Create your models here.
 class Company(models.Model):
@@ -18,6 +19,7 @@ class ContactStatus(Enum):
     STRONG_CONNECTION = 'Established Connection'
 
 class Employee(models.Model):
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     name = models.CharField(max_length=255)
     linkedin_link = models.URLField(blank=True)
     email = models.EmailField(null=True, blank=True)
@@ -28,6 +30,7 @@ class Employee(models.Model):
         return f"{self.job_title}: {self.name} works in {self.company.name}"
 
 class Question(models.Model):
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     question = models.TextField()
     answer = models.TextField()
     application = models.ForeignKey('Application', on_delete=models.SET_NULL, null=True)
@@ -43,6 +46,7 @@ class ApplicationStatus(Enum):
     ACCEPTED = 'Accepted'
 
 class Application(models.Model):
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     Company = models.ForeignKey(Company, on_delete=models.SET_NULL, null=True)
     job_title = models.CharField(max_length=255)
     job_type = models.CharField(max_length=255)

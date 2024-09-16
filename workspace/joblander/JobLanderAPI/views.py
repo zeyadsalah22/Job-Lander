@@ -30,8 +30,16 @@ class EmployeesView(generics.ListCreateAPIView):
     serializer_class = EmployeesSerializer
     permission_classes = [IsAuthenticated]
     ordering_fields = ['name']
-    search_fields = ['name', 'job_title']
+    search_fields = ['name', 'job_title', 'company__name', 'contacted']
     pagination_class = CustomPageNumberPagination
 
     def get_queryset(self):
         return Employee.objects.filter(user=self.request.user)
+    
+class SingleEmployeeView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Employee.objects.all()
+    serializer_class = EmployeesSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return Employee.objects.filter(id=self.kwargs['pk'], user=self.request.user)

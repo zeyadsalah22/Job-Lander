@@ -6,8 +6,8 @@ from django.contrib.auth.models import User
 class Company(models.Model):
     name = models.CharField(max_length=255)
     location = models.CharField(max_length=255)
-    careers_link = models.URLField(default=None)
-    linkedin_link = models.URLField(default=None)
+    careers_link = models.URLField(null=True)
+    linkedin_link = models.URLField(null=True)
     def __str__(self):
         return f"Company: {self.name}"
     

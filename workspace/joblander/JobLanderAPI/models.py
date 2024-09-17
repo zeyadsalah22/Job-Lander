@@ -45,16 +45,23 @@ class ApplicationStatus(Enum):
     REJECTED = 'Rejected'
     ACCEPTED = 'Accepted'
 
+class Stage(Enum):
+    APPLIED = 'Applied'
+    PHONE_SCREEN = 'Phone Screen'
+    ASSESSMENT = 'Assessment'
+    INTERVIEW = 'Interview'
+    OFFER = 'Offer'
+
 class Application(models.Model):
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
-    Company = models.ForeignKey(Company, on_delete=models.SET_NULL, null=True)
+    company = models.ForeignKey(Company, on_delete=models.SET_NULL, null=True)
     job_title = models.CharField(max_length=255)
     job_type = models.CharField(max_length=255)
     description = models.TextField()
     link = models.CharField(max_length=255)
-    submitted_cv = models.FileField()
+    submitted_cv = models.FileField(null=True)
     ats_score = models.SmallIntegerField(default=0)
-    stage = models.CharField(max_length=255)
+    stage = models.CharField(max_length=255, choices=[(tag.name, tag.value) for tag in Stage])
     status = models.CharField(max_length=255, choices=[(tag.name, tag.value) for tag in ApplicationStatus])
     submission_date = models.DateField(auto_now_add=True)
     contacted_employees = models.ManyToManyField(Employee)

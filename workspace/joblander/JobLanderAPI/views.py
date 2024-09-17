@@ -27,7 +27,7 @@ class SingleCompanyView(generics.RetrieveUpdateDestroyAPIView):
 
 class EmployeesView(generics.ListCreateAPIView):
     queryset = Employee.objects.all()
-    serializer_class = EmployeesSerializer
+    serializer_class = EmployeeSerializer
     permission_classes = [IsAuthenticated]
     ordering_fields = ['name']
     search_fields = ['name', 'job_title', 'company__name', 'contacted']
@@ -38,8 +38,28 @@ class EmployeesView(generics.ListCreateAPIView):
     
 class SingleEmployeeView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Employee.objects.all()
-    serializer_class = EmployeesSerializer
+    serializer_class = EmployeeSerializer
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         return Employee.objects.filter(id=self.kwargs['pk'], user=self.request.user)
+    
+
+class ApplicationsView(generics.ListCreateAPIView):
+    queryset = Application.objects.all()
+    serializer_class = ApplicationSerializer
+    permission_classes = [IsAuthenticated]
+    ordering_fields = ['submission_date']
+    search_fields = ['job_title', 'company__name', 'status']
+    pagination_class = CustomPageNumberPagination
+
+    def get_queryset(self):
+        return Application.objects.filter(user=self.request.user)
+    
+class SingleApplicationView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Application.objects.all()
+    serializer_class = ApplicationDetailsSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return Application.objects.filter(id=self.kwargs['pk'], user=self.request.user)

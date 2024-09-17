@@ -7,4 +7,6 @@ urlpatterns = [
     path('companies/<int:pk>', views.SingleCompanyView.as_view(), name='single_company'),
     path('employees', views.EmployeesView.as_view(), name='employees'),
     path('employees/<int:pk>', views.SingleEmployeeView.as_view(), name='single_employee'),
+    path('applications', views.ApplicationsView.as_view(), name='applications'),
+    path('applications/<int:pk>', views.SingleApplicationView.as_view(), name='single_application'),
 ]

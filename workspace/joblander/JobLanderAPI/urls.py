@@ -9,4 +9,6 @@ urlpatterns = [
     path('employees/<int:pk>', views.SingleEmployeeView.as_view(), name='single_employee'),
     path('applications', views.ApplicationsView.as_view(), name='applications'),
     path('applications/<int:pk>', views.SingleApplicationView.as_view(), name='single_application'),
+    path('questions', views.QuestionsView.as_view(), name='questions'),
+    path('questions/<int:pk>', views.SingleQuestionView.as_view(), name='single_question'),
 ]

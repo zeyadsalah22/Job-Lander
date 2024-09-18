@@ -4,7 +4,6 @@ from django.contrib.auth.models import User, Group
 from rest_framework.validators import UniqueTogetherValidator, UniqueValidator
 from django.shortcuts import get_object_or_404
 
-
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
@@ -40,6 +39,38 @@ class EmployeeSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("Not the Same user")
         return value
 
+class ApplicationQuestionsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Application
+        fields = ['id', 'job_title', 'job_type', 'link', 'stage', 'status', 'submission_date']
+
+
+class QuestionSerializer(serializers.ModelSerializer):
+    user = UserSerializer(read_only=True)
+    application = serializers.PrimaryKeyRelatedField(read_only=True)
+    user_id = serializers.IntegerField(write_only=True)
+    application_id = serializers.IntegerField(write_only=True)
+    class Meta:
+        model = Question
+        fields = ['id', 'question', 'answer', 'application', 'user', 'user_id', 'application_id']
+        validators = [
+            UniqueTogetherValidator(queryset=Question.objects.all(),
+                fields=['question', 'application_id','user_id'], message="Question Already Exists")
+        ]
+
+    def validate_user_id(self, value):
+        user = get_object_or_404(User, id=value)
+        if user != self.context['request'].user:
+            raise serializers.ValidationError("Not the Same user")
+        return value
+    
+    def validate_application_id(self, value):
+        application = get_object_or_404(Application, id=value)
+        if application.user != self.context['request'].user:
+            raise serializers.ValidationError("Application does not belong to the user")
+        return value
+
+
 class ApplicationSerializer(serializers.ModelSerializer):
     company = CompanySerializer(read_only=True)
     user = UserSerializer(read_only=True)
@@ -51,10 +82,11 @@ class ApplicationSerializer(serializers.ModelSerializer):
     stage = serializers.CharField(required=False, write_only=True)
     submitted_cv = serializers.FileField(required=False, write_only=True)
     contacted_employees = serializers.ListField(child=serializers.IntegerField(), write_only=True)
+    questions = QuestionSerializer(many=True, write_only=True)
     class Meta:
         model = Application
-        fields = ['id', 'user', 'company', 'job_title', 'job_type', 'link',
-                'submission_date', 'status', 'user_id', 'company_id', 'submitted_cv', 'description', 'ats_score', 'stage', 'contacted_employees']
+        fields = ['id', 'user', 'company', 'job_title', 'job_type', 'link', 'submission_date', 'status', 
+            'user_id', 'company_id', 'submitted_cv', 'description', 'ats_score', 'stage', 'contacted_employees', 'questions']
         
     def validate_ats_score(self, value):
         if value<0 or value>100:
@@ -86,20 +118,22 @@ class ApplicationDetailsSerializer(serializers.ModelSerializer):
     company_id = serializers.IntegerField(write_only=True)
     submission_date = serializers.DateField(read_only=True)
     contacted_employees = EmployeeSerializer(many=True, read_only=True)
-    contacted_employees_input = serializers.ListField(child=serializers.IntegerField(), write_only=True)
+    contacted_employees_id = serializers.ListField(child=serializers.IntegerField(), write_only=True)
+    questions = QuestionSerializer(many=True, read_only=True)
     class Meta:
         model = Application
         fields = ['id', 'user', 'company', 'job_title', 'job_type', 'link',
-                'submission_date', 'status', 'user_id', 'company_id', 'submitted_cv', 'description', 'ats_score', 'stage', 'contacted_employees_input', 'contacted_employees']
+                'submission_date', 'status', 'user_id', 'company_id', 'submitted_cv', 'description', 'ats_score', 'stage', 'contacted_employees_id', 'contacted_employees', 'questions']
         
     def validate_ats_score(self, value):
         if value<0 or value>100:
             raise serializers.ValidationError("ATS Score should be between 0 and 100")
         return value
 
-    def validate_contacted_employees_input(self, employees):
+    def validate_contacted_employees_id(self, employees):
         for id in employees:
             employee = get_object_or_404(Employee,id=id)
             if employee.user != self.context['request'].user:
                 raise serializers.ValidationError("Employee does not belong to the user")
         return employees
+    

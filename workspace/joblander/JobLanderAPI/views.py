@@ -63,3 +63,22 @@ class SingleApplicationView(generics.RetrieveUpdateDestroyAPIView):
 
     def get_queryset(self):
         return Application.objects.filter(id=self.kwargs['pk'], user=self.request.user)
+    
+class QuestionsView(generics.ListCreateAPIView):
+    queryset = Question.objects.all()
+    serializer_class = QuestionSerializer
+    permission_classes = [IsAuthenticated]
+    ordering_fields = ['application__submission_date']
+    search_fields = ['question', 'application__job_title', 'application__company__name']
+    pagination_class = CustomPageNumberPagination
+
+    def get_queryset(self):
+        return Question.objects.filter(user=self.request.user)
+    
+class SingleQuestionView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Question.objects.all()
+    serializer_class = QuestionSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return Question.objects.filter(id=self.kwargs['pk'], user=self.request.user)

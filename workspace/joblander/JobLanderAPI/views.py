@@ -4,6 +4,9 @@ from .models import *
 from .serializers import *
 from .pagination import CustomPageNumberPagination
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
+from django.db.models import Count, Q
+from rest_framework.views import APIView
+from rest_framework.response import Response
 
 # Create your views here.
 def index(request):
@@ -82,3 +85,37 @@ class SingleQuestionView(generics.RetrieveUpdateDestroyAPIView):
 
     def get_queryset(self):
         return Question.objects.filter(id=self.kwargs['pk'], user=self.request.user)
+    
+class StatisticsView(APIView):
+    def get(self, request, *args, **kwargs):
+        user = request.user
+        
+        # Aggregate in a single query
+        stats = Application.objects.filter(user=user).aggregate(
+            total_applications=Count('id'),
+            pending_applications=Count('id', filter=~Q(status=ApplicationStatus.REJECTED.name) & ~Q(status=ApplicationStatus.ACCEPTED.name)),
+            rejected_applications=Count('id', filter=Q(status=ApplicationStatus.REJECTED.name)),
+            accepted_offers=Count('id', filter=Q(status=ApplicationStatus.ACCEPTED.name)),
+        )
+
+        return Response(stats)
+    
+class PercentsView(APIView):
+    def get(self, request, *args, **kwargs):
+        user = request.user
+        
+        # Aggregate in a single query
+        stats = Application.objects.filter(user=user, status__in=[ApplicationStatus.ACCEPTED.name, ApplicationStatus.REJECTED.name]).aggregate(
+            total_applications=Count('id'),
+            applied_stage=Count('id', filter=Q(stage=Stage.APPLIED.name)),
+            phonescreen_stage=Count('id', filter=Q(stage=Stage.PHONE_SCREEN.name)),
+            assessment_stage=Count('id', filter=Q(stage=Stage.ASSESSMENT.name)),
+            interview_stage=Count('id', filter=Q(stage=Stage.INTERVIEW.name)),
+            offer_stage=Count('id', filter=Q(stage=Stage.OFFER.name)),
+        )
+
+        total = stats['total_applications']
+        for key in stats:
+            stats[key] = round((stats[key]/total)*100, 2)
+
+        return Response(stats)

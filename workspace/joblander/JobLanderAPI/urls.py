@@ -11,4 +11,6 @@ urlpatterns = [
     path('applications/<int:pk>', views.SingleApplicationView.as_view(), name='single_application'),
     path('questions', views.QuestionsView.as_view(), name='questions'),
     path('questions/<int:pk>', views.SingleQuestionView.as_view(), name='single_question'),
+    path('statistics', views.StatisticsView.as_view(), name='statistics'),
+    path('percents', views.PercentsView.as_view(), name='percents'),
 ]

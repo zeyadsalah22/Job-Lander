@@ -67,6 +67,6 @@ class Application(models.Model):
     contacted_employees = models.ManyToManyField(Employee)
 
     def __str__(self):
-        return f"{self.job_title} at {self.Company.name} is {self.status}"
+        return f"{self.job_title} at {self.company.name} is {self.status}"
 
 

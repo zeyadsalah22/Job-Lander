@@ -92,8 +92,7 @@ class ApplicationDetailsSerializer(serializers.ModelSerializer):
         return value
 
     def validate_contacted_employees(self, employees):
-        for id in employees:
-            employee = get_object_or_404(Employee,id=id)
+        for employee in employees:
             if employee.user != self.context['request'].user:
                 raise serializers.ValidationError("Employee does not belong to the user")
         return employees

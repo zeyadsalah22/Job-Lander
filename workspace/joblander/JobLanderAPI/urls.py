@@ -13,4 +13,5 @@ urlpatterns = [
     path('questions/<int:pk>', views.SingleQuestionView.as_view(), name='single_question'),
     path('statistics', views.StatisticsView.as_view(), name='statistics'),
     path('percents', views.PercentsView.as_view(), name='percents'),
+    path('timeseries', views.TimeSeriesView.as_view(), name='timeseries'),
 ]

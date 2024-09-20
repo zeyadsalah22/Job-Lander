@@ -7,7 +7,7 @@ from django.shortcuts import get_object_or_404
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['id', 'username']
+        fields = ['id', 'username', 'email']
 
 class CompanySerializer(serializers.ModelSerializer):
     name = serializers.CharField(
@@ -34,8 +34,7 @@ class EmployeeSerializer(serializers.ModelSerializer):
         ]
     
     def validate_user_id(self, value):
-        user = get_object_or_404(User, id=value)
-        if user != self.context['request'].user:
+        if value != self.context['request'].user.id:
             raise serializers.ValidationError("Not the Same user")
         return value
 
@@ -44,7 +43,7 @@ class ApplicationSerializer(serializers.ModelSerializer):
     user = UserSerializer(read_only=True)
     user_id = serializers.IntegerField(write_only=True)
     company_id = serializers.IntegerField(write_only=True)
-    submission_date = serializers.DateField(read_only=True)
+    submission_date = serializers.DateField(required=False)
     description = serializers.CharField(required=False, write_only=True)
     ats_score = serializers.IntegerField(required=False, write_only=True)
     stage = serializers.CharField(required=False, write_only=True)
@@ -59,12 +58,18 @@ class ApplicationSerializer(serializers.ModelSerializer):
         if value<0 or value>100:
             raise serializers.ValidationError("ATS Score should be between 0 and 100")
         return value
+    
     def validate_contacted_employees(self, employees):
         for id in employees:
             employee = get_object_or_404(Employee,id=id)
             if employee.user != self.context['request'].user:
                 raise serializers.ValidationError("Employee does not belong to the user")
         return employees
+    
+    def validate_user_id(self, value):
+        if value != self.context['request'].user.id:
+            raise serializers.ValidationError("Not the Same user")
+        return value
     
     # def validate_questions(self, questions):
     #     for id in questions:
@@ -97,6 +102,11 @@ class ApplicationDetailsSerializer(serializers.ModelSerializer):
                 raise serializers.ValidationError("Employee does not belong to the user")
         return employees
     
+    def validate_user_id(self, value):
+        if value != self.context['request'].user.id:
+            raise serializers.ValidationError("Not the Same user")
+        return value
+    
     # def validate_questions(self, questions):
     #     for id in questions:
     #         question = get_object_or_404(Question,id=id)
@@ -119,8 +129,7 @@ class QuestionSerializer(serializers.ModelSerializer):
         ]
 
     def validate_user_id(self, value):
-        user = get_object_or_404(User, id=value)
-        if user != self.context['request'].user:
+        if value != self.context['request'].user.id:
             raise serializers.ValidationError("Not the Same user")
         return value
     

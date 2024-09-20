@@ -42,7 +42,7 @@ class EmployeesView(generics.ListCreateAPIView):
     def get_queryset(self):
         queryset = Employee.objects.filter(user=self.request.user)
         company_id = self.request.query_params.get('company__id', None)
-        if company_id is not None:
+        if company_id:
             queryset = queryset.filter(company__id=company_id)
         return queryset
     
@@ -60,11 +60,22 @@ class ApplicationsView(generics.ListCreateAPIView):
     serializer_class = ApplicationSerializer
     permission_classes = [IsAuthenticated]
     ordering_fields = ['submission_date']
+    filter_fields = ['company__id', 'submission_date', 'status']
     search_fields = ['job_title', 'company__name', 'status']
     pagination_class = CustomPageNumberPagination
 
     def get_queryset(self):
-        return Application.objects.filter(user=self.request.user)
+        queryset =  Application.objects.filter(user=self.request.user)
+        company_id = self.request.query_params.get('company__id', None)
+        submission_date = self.request.query_params.get('submission_date', None)
+        status = self.request.query_params.get('status', None)
+        if company_id:
+            queryset = queryset.filter(company__id=company_id)
+        if submission_date:
+            queryset = queryset.filter(submission_date=submission_date)
+        if status:
+            queryset = queryset.filter(status=status)
+        return queryset
     
 class SingleApplicationView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Application.objects.all()
@@ -86,7 +97,7 @@ class QuestionsView(generics.ListCreateAPIView):
     def get_queryset(self):
         queryset =  Question.objects.filter(user=self.request.user)
         application_id = self.request.query_params.get('application__id', None)
-        if application_id is not None:
+        if application_id:
             queryset = queryset.filter(application__id=application_id)
         return queryset
     
@@ -107,7 +118,7 @@ class StatisticsView(APIView):
             total_applications=Count('id'),
             pending_applications=Count('id', filter=~Q(status=ApplicationStatus.REJECTED.name) & ~Q(status=ApplicationStatus.ACCEPTED.name)),
             rejected_applications=Count('id', filter=Q(status=ApplicationStatus.REJECTED.name)),
-            accepted_offers=Count('id', filter=Q(status=ApplicationStatus.ACCEPTED.name)),
+            accepted_applications=Count('id', filter=Q(status=ApplicationStatus.ACCEPTED.name)),
         )
 
         return Response(stats)
@@ -201,9 +212,9 @@ class TimeSeriesView(APIView):
 
         response_data ={
             "points" : points,
+            "start_date" : start_date.strftime(date_str),
             "interval" : interval,
             "results": results,
-            "data" : data
         }
 
         return Response(response_data)

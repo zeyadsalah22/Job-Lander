@@ -6,10 +6,11 @@ import math
 class CustomPageNumberPagination(PageNumberPagination):
     page_size = 4  # Default page size
     page_size_query_param = 'page_size'  # Allows overriding via query params
-    max_page_size = 100
+    max_page_size = 10
 
     def get_paginated_response(self, data):
-        total_pages = math.ceil(self.page.paginator.count / self.page_size)
+        size = self.get_page_size(self.request)
+        total_pages = math.ceil(self.page.paginator.count / size)
         
         return Response({
             'count': self.page.paginator.count,  # Total number of items

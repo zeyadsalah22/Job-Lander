@@ -1,6 +1,7 @@
 from django.db import models
 from enum import Enum
 from django.contrib.auth.models import User
+from datetime import date
 
 # Create your models here.
 class Company(models.Model):
@@ -63,7 +64,7 @@ class Application(models.Model):
     ats_score = models.SmallIntegerField(default=0)
     stage = models.CharField(max_length=255, choices=[(tag.name, tag.value) for tag in Stage])
     status = models.CharField(max_length=255, choices=[(tag.name, tag.value) for tag in ApplicationStatus])
-    submission_date = models.DateField(auto_now_add=True)
+    submission_date = models.DateField(default=date.today)
     contacted_employees = models.ManyToManyField(Employee)
 
     def __str__(self):

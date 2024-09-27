@@ -109,6 +109,25 @@ class SingleQuestionView(generics.RetrieveUpdateDestroyAPIView):
     def get_queryset(self):
         return Question.objects.filter(id=self.kwargs['pk'], user=self.request.user)
     
+class TodoListView(generics.ListCreateAPIView):
+    queryset = TodoList.objects.all()
+    serializer_class = TodoListSerializer
+    permission_classes = [IsAuthenticated]
+    ordering_fields = ['completed']
+    search_fields = ['application_title']
+    pagination_class = CustomPageNumberPagination
+
+    def get_queryset(self):
+        return TodoList.objects.filter(user=self.request.user)
+    
+class SingleTodoView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = TodoList.objects.all()
+    serializer_class = TodoListSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return TodoList.objects.filter(id=self.kwargs['pk'], user=self.request.user)
+
 class StatisticsView(APIView):
     def get(self, request, *args, **kwargs):
         user = request.user

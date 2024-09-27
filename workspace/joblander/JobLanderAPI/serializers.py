@@ -138,3 +138,19 @@ class QuestionSerializer(serializers.ModelSerializer):
         if application.user != self.context['request'].user:
             raise serializers.ValidationError("Application does not belong to the user")
         return value
+    
+class TodoListSerializer(serializers.ModelSerializer):
+    user = UserSerializer(read_only=True)
+    user_id = serializers.IntegerField(write_only=True)
+    class Meta:
+        model = TodoList
+        fields = ['id', 'user', 'application_title', 'application_link', 'completed', 'user_id']
+        validators = [
+            UniqueTogetherValidator(queryset=TodoList.objects.all(),
+                fields=['application_title', 'user_id'], message="ToDo Already Exists")
+        ]
+
+    def validate_user_id(self, value):
+        if value != self.context['request'].user.id:
+            raise serializers.ValidationError("Not the Same user")
+        return value

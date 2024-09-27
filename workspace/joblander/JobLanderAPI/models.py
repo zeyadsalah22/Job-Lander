@@ -17,7 +17,7 @@ class ContactStatus(Enum):
     ACCEPTED = 'Accepted'
     MESSAGED = 'Messaged'
     REPLIED = 'Replied'
-    STRONG_CONNECTION = 'Established Connection'
+    STRONG_CONNECTION = 'Strong Connection'
 
 class Employee(models.Model):
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
@@ -59,15 +59,23 @@ class Application(models.Model):
     job_title = models.CharField(max_length=255)
     job_type = models.CharField(max_length=255)
     description = models.TextField()
-    link = models.CharField(max_length=255)
+    link = models.URLField(null=True)
     submitted_cv = models.FileField(null=True)
     ats_score = models.SmallIntegerField(default=0)
     stage = models.CharField(max_length=255, choices=[(tag.name, tag.value) for tag in Stage])
     status = models.CharField(max_length=255, choices=[(tag.name, tag.value) for tag in ApplicationStatus])
     submission_date = models.DateField(default=date.today)
-    contacted_employees = models.ManyToManyField(Employee)
+    contacted_employees = models.ManyToManyField(Employee,blank=True)
 
     def __str__(self):
         return f"{self.job_title} at {self.company.name} is {self.status}"
+    
+class TodoList(models.Model):
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    application_title = models.TextField()
+    application_link = models.URLField(null=True, blank=True)
+    completed = models.BooleanField(default=False)
+    def __str__(self):
+        return f"ToDo: {self.application_title} for {self.user.username}"
 
 

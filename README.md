@@ -30,7 +30,7 @@ For detailed API documentation and usage, please refer to our [API Documentation
 - Job application creation, update, and deletion
 - Company and employee contact management
 - Interview question logging
-- Save applications to apply later
+- Save job opportunities for applying later
 - Statistics and insights retrieval for job search performance
 
 ## Installation
@@ -87,7 +87,7 @@ Once the servers are running, navigate to [http://localhost:3000](http://localho
 - Add new job applications
 - Track the status of their applications
 - Review questions asked in interviews
-- Save applications in todo list to apply later
+- Save job opportunities in a to-do list for applying later
 - Generate reports and statistics for better insights
 
 ## Frontend Overview

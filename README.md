@@ -240,7 +240,7 @@ The project uses Django Rest Framework's **generic views** to handle the main AP
 - **`/api/applications/`**: Create, view, update, or delete job applications.
 - **`/api/applications?search=Software`**: Search applications based on title.
 - **`/api/applications?ordering=submission_date`**: Order applications by submission_date (asc/desc).
-- **`/api/applications?filter=status=open`**: Filter applications by status.
+- **`/api/timeseries`**: Get timeseries insights to be used for the line chart graph .
 
 For more details about the backend API, check out the [API Documentation](https://app.swaggerhub.com/apis-docs/ZEYADMOUSSA_1/JobLanderAPIs/1.0.3).
 

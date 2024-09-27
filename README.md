@@ -25,7 +25,7 @@ JobLander is built to simplify job application management by allowing users to t
 - **Analytics and Insights**: Generate useful statistics and insights, including overall application progress and job search trends over time.
 
 ## API Documentation
-For detailed API documentation and usage, please refer to our [API Documentation](#) hosted externally. The API supports the following operations:
+For detailed API documentation and usage, please refer to our [API Documentation](https://app.swaggerhub.com/apis-docs/ZEYADMOUSSA_1/JobLanderAPIs/1.0.3) hosted externally. The API supports the following operations:
 - User registration, login, and profile management
 - Job application creation, update, and deletion
 - Company and employee contact management

@@ -17,11 +17,12 @@ JobLander is a comprehensive web application designed to help users manage their
 JobLander is built to simplify job application management by allowing users to track applications, manage interview data, keep notes on company contacts, and analyze their job search performance through detailed statistics and visual reports.
 
 ## Features
-- **User Management**: Users can sign up, log in, and manage their profiles.
-- **Job Application Tracking**: Add, edit, delete, and track the status of job applications.
-- **Company and Contact Management**: Keep records of companies and their employees for networking.
-- **Interview Preparation**: Log questions asked during interviews to better prepare for future opportunities.
-- **Analytics and Insights**: Track application success rates, rejections, and generate progress reports.
+- **User Management**: Users can sign up, update their profiles, and manage personal information.
+- **Job Application Tracking**: Users can create, update, and delete job applications, track progress, and manage application history.
+- **Company and Employee Management**: Manage companies and contacted employees during the hiring process, including adding and editing company and employee details.
+- **Interview Preparation**: Keep track of questions asked during interviews or applications for future reference.
+- **Save & Apply Later**: Save and manage applications link and title to apply for later through a todo list.
+- **Analytics and Insights**: Generate useful statistics and insights, including overall application progress and job search trends over time.
 
 ## API Documentation
 For detailed API documentation and usage, please refer to our [API Documentation](#) hosted externally. The API supports the following operations:
@@ -29,6 +30,7 @@ For detailed API documentation and usage, please refer to our [API Documentation
 - Job application creation, update, and deletion
 - Company and employee contact management
 - Interview question logging
+- Save applications to apply later
 - Statistics and insights retrieval for job search performance
 
 ## Installation
@@ -85,6 +87,7 @@ Once the servers are running, navigate to [http://localhost:3000](http://localho
 - Add new job applications
 - Track the status of their applications
 - Review questions asked in interviews
+- Save applications in todo list to apply later
 - Generate reports and statistics for better insights
 
 ## Frontend Overview

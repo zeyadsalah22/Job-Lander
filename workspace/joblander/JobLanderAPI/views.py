@@ -156,7 +156,7 @@ class PercentsView(APIView):
             offer_stage=Count('id', filter=Q(stage=Stage.OFFER.name)),
         )
 
-        total = stats['total_applications']
+        total = max(stats['total_applications'],1)
         for key in stats:
             stats[key] = round((stats[key]/total)*100, 2)
 
@@ -168,7 +168,7 @@ class TimeSeriesView(APIView):
         user = request.user
         interval = request.query_params.get('interval', 'month')
         points = int(request.query_params.get('points', 12))
-        start_date = request.query_params.get('start_date', None)
+        start_date = request.query_params.get('start_date', request.user.date_joined.strftime('%Y-%m-%d'))
         if interval not in ['month', 'week', 'day']:
             return Response({'error': 'Invalid interval. Choose from: month, week, day'}, status=400)
         if points < 1 or points>100:

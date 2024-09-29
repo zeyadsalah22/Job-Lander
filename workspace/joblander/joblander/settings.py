@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'corsheaders',
     'JobLanderAPI',
     'rest_framework',
     'djoser',
@@ -46,6 +47,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -163,3 +165,10 @@ DJOSER={
     # "PASSWORD_RESET_SHOW_EMAIL_NOT_FOUND":True,
     # "USERNAME_RESET_SHOW_EMAIL_NOT_FOUND":True,   
     }
+
+CORS_ALLOW_ALL_ORIGINS = True
+
+CORS_ALLOW_HEADERS = [
+    'Authorization',
+    'Content-Type',
+]

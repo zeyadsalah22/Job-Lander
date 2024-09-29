@@ -47,7 +47,7 @@ class ApplicationSerializer(serializers.ModelSerializer):
     description = serializers.CharField(required=False, write_only=True)
     ats_score = serializers.IntegerField(required=False, write_only=True)
     stage = serializers.CharField(required=False, write_only=True)
-    submitted_cv = serializers.FileField(required=False, write_only=True)
+    submitted_cv = serializers.FileField(required=False, allow_null=True, write_only=True)
     contacted_employees = serializers.ListField(child=serializers.IntegerField(), write_only=True)
     class Meta:
         model = Application
@@ -81,7 +81,7 @@ class ApplicationSerializer(serializers.ModelSerializer):
 class ApplicationDetailsSerializer(serializers.ModelSerializer):
     company = CompanySerializer(read_only=True)
     user = UserSerializer(read_only=True)
-    submitted_cv = serializers.FileField(required=False)
+    submitted_cv = serializers.FileField(required=False, allow_null=True)
     user_id = serializers.IntegerField(write_only=True)
     company_id = serializers.IntegerField(write_only=True)
     submission_date = serializers.DateField(read_only=True)

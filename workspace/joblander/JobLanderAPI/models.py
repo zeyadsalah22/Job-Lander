@@ -60,7 +60,7 @@ class Application(models.Model):
     job_type = models.CharField(max_length=255)
     description = models.TextField()
     link = models.URLField(null=True)
-    submitted_cv = models.FileField(null=True)
+    submitted_cv = models.FileField(null=True, blank=True)
     ats_score = models.SmallIntegerField(default=0)
     stage = models.CharField(max_length=255, choices=[(tag.name, tag.value) for tag in Stage])
     status = models.CharField(max_length=255, choices=[(tag.name, tag.value) for tag in ApplicationStatus])

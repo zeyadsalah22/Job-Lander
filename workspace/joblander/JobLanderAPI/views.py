@@ -4,7 +4,7 @@ from .models import *
 from .serializers import *
 from .pagination import CustomPageNumberPagination
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
-from django.db.models import Count, Q
+from django.db.models import Count, Q, Max
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.db.models.functions import TruncMonth, TruncDay, TruncWeek
@@ -131,13 +131,16 @@ class SingleTodoView(generics.RetrieveUpdateDestroyAPIView):
 class StatisticsView(APIView):
     def get(self, request, *args, **kwargs):
         user = request.user
-        
-        # Aggregate in a single query
+
         stats = Application.objects.filter(user=user).aggregate(
             total_applications=Count('id'),
             pending_applications=Count('id', filter=~Q(status=ApplicationStatus.REJECTED.name) & ~Q(status=ApplicationStatus.ACCEPTED.name)),
             rejected_applications=Count('id', filter=Q(status=ApplicationStatus.REJECTED.name)),
             accepted_applications=Count('id', filter=Q(status=ApplicationStatus.ACCEPTED.name)),
+            last_application=Max('submission_date'),
+            last_rejection=Max('submission_date', filter=Q(status=ApplicationStatus.REJECTED.name)),
+            last_acceptance=Max('submission_date', filter=Q(status=ApplicationStatus.ACCEPTED.name)),
+            last_pending=Max('submission_date', filter=~Q(status=ApplicationStatus.REJECTED.name) & ~Q(status=ApplicationStatus.ACCEPTED.name)),
         )
 
         return Response(stats)

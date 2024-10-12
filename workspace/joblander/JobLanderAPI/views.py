@@ -30,6 +30,29 @@ class SingleCompanyView(generics.RetrieveUpdateDestroyAPIView):
     def get_queryset(self):
         return Company.objects.filter(id=self.kwargs['pk'])
 
+class CompanyQuestionsView(generics.ListCreateAPIView):
+    queryset = CompanyQuestions.objects.all()
+    serializer_class = CompanyQuestionsSerializer
+    permission_classes = [IsAuthenticated]
+    ordering_fields = ['company__name']
+    filter_fields = ['company__id']
+    search_fields = ['company__name', 'question']
+    pagination_class = CustomPageNumberPagination
+
+    def get_queryset(self):
+        company_id = self.request.query_params.get('company__id', None)
+        if company_id:
+            self.queryset = self.queryset.filter(company__id=company_id)
+        return self.queryset
+    
+class SingleCompanyQuestionView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = CompanyQuestions.objects.all()
+    serializer_class = CompanyQuestionsSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return CompanyQuestions.objects.filter(id=self.kwargs['pk'])
+
 class EmployeesView(generics.ListCreateAPIView):
     queryset = Employee.objects.all()
     serializer_class = EmployeeSerializer

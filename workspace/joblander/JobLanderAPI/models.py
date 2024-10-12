@@ -7,11 +7,20 @@ from datetime import date
 class Company(models.Model):
     name = models.CharField(max_length=255)
     location = models.CharField(max_length=255)
-    careers_link = models.URLField(null=True)
-    linkedin_link = models.URLField(null=True)
+    careers_link = models.URLField(null=True, blank=True)
+    linkedin_link = models.URLField(null=True, blank=True)
+    description = models.TextField(null=True, blank=True)
     def __str__(self):
         return f"Company: {self.name}"
-    
+
+class CompanyQuestions(models.Model):
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    company = models.ForeignKey(Company, on_delete=models.SET_NULL, null=True)
+    question = models.TextField()
+    answer = models.TextField()
+    def __str__(self):
+        return f"Question: {self.question} for {self.company.name}"
+
 class ContactStatus(Enum):
     SENT = 'Sent'
     ACCEPTED = 'Accepted'

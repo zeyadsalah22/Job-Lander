@@ -17,6 +17,27 @@ class CompanySerializer(serializers.ModelSerializer):
         model = Company
         fields = '__all__'
 
+class CompanyQuestionsSerializer(serializers.ModelSerializer):
+    user = UserSerializer(read_only=True)
+    company = CompanySerializer(read_only=True)
+    user_id = serializers.IntegerField(write_only=True)
+    company_id = serializers.IntegerField(write_only=True)
+    class Meta:
+        model = CompanyQuestions
+        fields = ['id', 'user', 'company', 'question', 'answer', 'user_id', 'company_id']
+        validators = [
+            UniqueTogetherValidator(
+                queryset=CompanyQuestions.objects.all(),
+                fields=['user_id', 'company_id', 'question'],
+                message="Question Already Exists"
+            )
+        ]
+    
+    def validate_user_id(self, value):
+        if value != self.context['request'].user.id:
+            raise serializers.ValidationError("Not the Same user")
+        return value
+
 class EmployeeSerializer(serializers.ModelSerializer):
     user = UserSerializer(read_only=True)
     company = CompanySerializer(read_only=True)

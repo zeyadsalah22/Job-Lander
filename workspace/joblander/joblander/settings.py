@@ -46,6 +46,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -82,13 +83,13 @@ WSGI_APPLICATION = 'joblander.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'joblander',
-        'USER' : 'jobadmin',
-        'PASSWORD' : 'admin@123',
-        'HOST' : 'localhost',
+        'NAME': 'db13288',
+        'USER' : 'db13288',
+        'PASSWORD' : 'Monster@123',
+        'HOST' : 'db13288.public.databaseasp.net',
         'PORT' : '3306',
     }
-}
+}   
 
 
 # Password validation
@@ -126,6 +127,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = 'static/'
+
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+STATIC_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Define the base URL to serve media files
 MEDIA_URL = '/media/'

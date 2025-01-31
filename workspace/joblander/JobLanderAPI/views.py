@@ -10,7 +10,6 @@ from rest_framework.response import Response
 from django.db.models.functions import TruncMonth, TruncDay, TruncWeek
 from datetime import datetime, timedelta
 
-# Create your views here.
 def index(request):
     return render(request, 'index.html')
 

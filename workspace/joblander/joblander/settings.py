@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-(!77$x@0cqr)jr^y&3q1q$(ii8x)x7ccgry!vc484qa4$+d43^
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+    'whitenoise.runserver_nostatic',
     'django.contrib.staticfiles',
     'corsheaders',
     'JobLanderAPI',
@@ -83,13 +84,13 @@ WSGI_APPLICATION = 'joblander.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'db13288',
-        'USER' : 'db13288',
-        'PASSWORD' : 'Monster@123',
-        'HOST' : 'db13288.public.databaseasp.net',
+        'NAME': 'joblander',
+        'USER' : 'jobadmin',
+        'PASSWORD' : 'admin@123',
+        'HOST' : 'localhost',
         'PORT' : '3306',
     }
-}   
+}
 
 
 # Password validation

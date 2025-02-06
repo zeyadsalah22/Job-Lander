@@ -64,6 +64,13 @@ class CompanyQuestionsSerializer(serializers.ModelSerializer):
                 message="Question Already Exists"
             )
         ]
+    
+    def validate_company_id(self, value):
+        company = get_object_or_404(Company, id=value)
+        if company.user != self.context['request'].user:
+            raise serializers.ValidationError("Company does not belong to the user")
+        return value
+    
 
 class EmployeeSerializer(serializers.ModelSerializer):
     user = UserSerializer(read_only=True)
@@ -95,7 +102,6 @@ class ApplicationSerializer(serializers.ModelSerializer):
     description = serializers.CharField(required=False, write_only=True)
     ats_score = serializers.IntegerField(required=False, write_only=True)
     stage = serializers.CharField(required=False, write_only=True)
-    submitted_cv = CVSerializer(read_only=True)
     submitted_cv_id = serializers.IntegerField(required=False, allow_null=True, write_only=True)
     contacted_employees = serializers.ListField(child=serializers.IntegerField(), write_only=True)
     class Meta:
